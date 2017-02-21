@@ -1,7 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Basic Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DatabaseExtension", "DatabaseExtension\DatabaseExtension.vbproj", "{3CBCC351-0DEB-4CE8-8182-3DC21D6A5BF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseExtensionExample", "DatabaseExtensionExample\DatabaseExtensionExample.csproj", "{D43443CE-469B-4CB6-AE15-90DC8BA0AD95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,10 @@ Global
 		{3CBCC351-0DEB-4CE8-8182-3DC21D6A5BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CBCC351-0DEB-4CE8-8182-3DC21D6A5BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CBCC351-0DEB-4CE8-8182-3DC21D6A5BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D43443CE-469B-4CB6-AE15-90DC8BA0AD95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D43443CE-469B-4CB6-AE15-90DC8BA0AD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D43443CE-469B-4CB6-AE15-90DC8BA0AD95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D43443CE-469B-4CB6-AE15-90DC8BA0AD95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

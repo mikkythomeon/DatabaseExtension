@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<DataApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="D:\Programming\ProgrammingIdeas\DefyMES\Queries.xsd">
+  
+  <Database ID ="EzkDefyMES" Database ="DEFY_MES" Password ="123456789" ServerAddress ="DFEZA06" UserName ="AUTUSER" DatabaseType="SQL" />
+  <Database ID ="EzkDefyAUT" Database ="DEFY_AUT" Password ="123456789" ServerAddress ="DFEZA06" UserName ="AUTUSER" DatabaseType="SQL" />
+  <Database ID ="EzkDefySAP" Database ="zUC_Defy_SAP_DX" Password ="ucsql" ServerAddress ="DFEZA30" UserName ="UControl" DatabaseType="SQL" />
+  
+  <Queries>
+    <Query Name="LogEvent" DatabaseID="EzkDefyAUT">
+      INSERT INTO LOGS(LogAppID,LogDesc,LogDate) VALUES ('@AppID','@msg',GETDATE());
+      delete from Logs WHERE LogDate &lt; Getdate()-7;
+   </Query>
+
+    <Query Name="SetProductLocation" DatabaseID="EzkDefyMES">
+      INSERT INTO ProductLocation(PLine, Product, Serial, Location, EntryDate)
+      VALUES ('@PLine','@Product','@Serial','@Location', GETDATE())
+    </Query>
+
+    <Query Name="LogEvent" DatabaseID="EzkDefyMES">
+      INSERT INTO DEFY_AUT.dbo.LOGS(LogAppID,LogDesc,LogDate)
+      VALUES ('@AppID','@msg',GETDATE());
+      delete from DEFY_AUT.dbo.Logs WHERE LogDate &gt; Getdate()-7;
+    </Query>
+
+    <Query Name="SetProductLocation" DatabaseID="EzkDefyMES">
+      INSERT INTO ProductLocation(PLine, Product, Serial, Location, EntryDate)
+      VALUES ('@PLine','@Product','@Serial','@Location', GETDATE())
+    </Query>
+
+    <Query Name="GetProductDefectListEx" DatabaseID="EzkDefyMES">
+      with a as (
+        select Station, MAX(RepairNo) ID from Repair with (nolock)
+        WHERE PLine=@PLine AND Product='@Product' and Serial='@Serial'
+        GROUP BY Station
+      ), b as  (
+        select b.*
+        FROM a LEFT JOIN Repair b
+        with (nolock) on a.ID=b.RepairNo
+      )
+        select	
+          b.RepairNo,
+          b.Station,
+          d.Explanation,
+          c.Location,
+          c.Explanation Description,
+          b.TestResultDate ,
+          case when b.TestResult IS NULL then 'No test result' else b.TestResult end TestResult,
+          e.RepairCode,
+          e.Explanation RepairType
+        from b LEFT JOIN ProductLocationReferance c
+        on b.Station=c.TestStationNumber
+        LEFT JOIN StationExplanations d
+        on b.Station=d.Station
+        LEFT JOIN RepairCodes e
+        ON b.RepairCode = e.RepairCode
+    </Query>
+
+    <Query Name="GetProductStatus" DatabaseID="EzkDefyMES">
+      with a as (
+        select Station, MAX(RepairNo) ID from Repair with (nolock)
+        WHERE PLine='@ProductionLineNo' AND Product='@Product' and Serial='@Serial' GROUP BY Station
+      )
+      select case when TestResult is null then '??' else TestResult end TestResult FROM a LEFT JOIN Repair b with (nolock) on a.ID=b.RepairNo
+    </Query>
+
+    <Query Name="LogProductDefect" DatabaseID="EzkDefyMES">
+      update Repair
+      set RepairCode='@RepairCode',OperatorCode='@OperatorCode', TestResult='NG' where RepairNo=@RepairNo
+    </Query>
+
+    <Query Name="CreateRepairRecord" DatabaseID="EzkDefyMES">
+      if not exists(
+        select 1 from Repair WHERE Product='@Product' and Serial='@Serial' and PLine='@PLine' and Station='@StationID'
+      )
+      BEGIN
+        insert into Repair(PLine, Product, Serial, Station, TestResult, TestResultDate,RepairCode)
+        VALUES ('@PLine','@Product','@Serial','@StationID', NULL, GETDATE(),NULL)
+      END
+      select max(RepairNo) RepairNo
+      from Repair
+      WHERE Product='@Product' and Serial='@Serial' and PLine='@PLine' and Station='@StationID'
+    </Query>
+
+    <Query Name="GetRepairNo" DatabaseID="EzkDefyMES">
+      select max(RepairNo) RepairNo
+      from Repair
+      WHERE Product='@Product' and Serial='@Serial' and PLine='@PLine' and Station='@StationID'
+    </Query>
+
+    <Query Name="LogProductRework" DatabaseID="EzkDefyMES">
+      UPDATE Repair
+      SET TestResult='RW',
+      OperatorCode='@OperatorCode',
+      RepairCodeDate=GetDate()
+      WHERE RepairNo='@RepairNumber'
+    </Query>
+
+    <Query Name="LogProductRepair" DatabaseID="EzkDefyMES">
+      UPDATE Repair
+      SET TestResult='OK',
+      OperatorCode='@OperatorCode',
+      RepairCodeDate=GetDate()
+      WHERE RepairNo='@RepairNumber'
+    </Query>
+
+    <Query Name="GetAllProductDefects" DatabaseID="EzkDefyMES">
+      SELECT RepairCode, Explanation,
+      case when ReVacuumGasCharge=0 then 'No' else 'Yes' end ReVacuumGasCharge,
+      cast(0 as bit) Selected FROM RepairCodes
+    </Query>
+
+    <Query Name="GetProductDefectsForCategory" DatabaseID="EzkDefyMES">
+      SELECT	RepairCode,
+      Explanation,
+      case when ReVacuumGasCharge=0 then 'No' else 'Yes' end ReVacuumGasCharge,
+      cast(0 as bit) Selected
+      FROM RepairCodes WHERE FaultCategoryID IN (@FaultList)
+    </Query>
+
+
+    <Query Name="GetStationDescription" DatabaseID="EzkDefyMES">
+      select Explanation
+      from ProductLocationReferance
+      WHERE TestStationNumber='@StationID'
+    </Query>
+
+
+    <Query Name="IncrementSerialNo" DatabaseID="EzkDefyMES">
+      UPDATE ProductSerial
+      SET SerialNo=SerialNo+1
+      WHERE Product='@product';
+
+      SELECT SerialNo
+      FROM ProductSerial with (nolock)
+      WHERE Product='@serial';
+    </Query>
+
+    <Query Name="GetProductList" DatabaseID="EzkDefyMES">
+      SELECT PRODUCT from [DEFY_MES].[dbo].[Product] ORDER BY PRODUCT
+    </Query>
+
+    <Query Name="CreatePrintRun" DatabaseID="EzkDefyMES">
+      exec create_print_run '@ProductCode',@Qty,'@requireddate','@RatingLabelName','@PackLabelName'
+    </Query>
+
+    <Query Name="GetPrintRuns" DatabaseID="EzkDefyMES">
+      SELECT * from PrintRun
+      WHERE Complete=0
+      AND RequiredDate='@requireddate'
+      ORDER BY PRODUCT
+    </Query>
+
+    <Query Name="GetTestResults" DatabaseID="EzkDefyMES">
+      with a as (
+        select Station,MAX(RepairNo)RepairNo from Repair Where Product='@Product' AND Serial='@SerialNo' and TestResult is not Null GROUP BY Station
+      )
+      SELECT b.* FROM [DEFY_MES].[dbo].[Repair]  b
+      JOIN a on b.Station=a.Station And b.RepairNo = a.RepairNo
+      Where b.Product='@Product' AND b.Serial='@SerialNo'  and b.TestResult is not Null order by RepairNo
+    </Query>
+
+    <Query Name="GetLabelPath" DatabaseID="EzkDefyMES">
+      select * FROM Label WHERE Product='@Product'
+    </Query>
+
+    <Query Name="GetLabelData" DatabaseID="EzkDefyMES">
+      SELECT * FROM [DEFY_MES].[dbo].[Label] WHERE LabelType='@LabelType' ORDER BY PRODUCT
+    </Query>
+
+    <Query Name="PostBackflushToTempTable" DatabaseID="EzkDefySAP">
+      IF EXISTS(SELECT 1 FROM [ZBAPI_REPMANCONF1_BATCH] WHERE HeaderText='@HeaderText')
+      BEGIN
+        INSERT INTO [ZBAPI_REPMANCONF1_BATCH] (PostingDate,HeaderText,MaterialNo,ProductVersion,ProPlant,PlanPlant,BackflushType,Quantity,UnitOfMeasure,ApplicationName)
+        VALUES(@PostingDate,'@HeaderText','@MaterialNo','@ProductVersion','@ProPlant','@PlanPlant','@BackflushType','@Quantity','@UnitOfMeasure','@ApplicationName')
+      END
+    </Query>
+
+    <Query Name="PostRevBackflushToTempTable" DatabaseID="EzkDefySAP">
+      IF NOT EXISTS(SELECT 1 FROM [ZBAPI_REPMANCONF1_BATCH] WHERE HeaderText='@HeaderText')
+      BEGIN
+        INSERT INTO [ZBAPI_REPMANCONF1_BATCH] (PostingDate,HeaderText,MaterialNo,ProductVersion,ProPlant,PlanPlant,BackflushType,Quantity,UnitOfMeasure,ApplicationName)
+        VALUES(@PostingDate,'@HeaderText','@MaterialNo','@ProductVersion','@ProPlant','@PlanPlant','@BackflushType','@Quantity','@UnitOfMeasure','@ApplicationName')
+      END
+    </Query>
+
+    <Query Name="UnitHasBeenBackflushed" DatabaseID="EzkDefySAP">
+      SELECT 1 from ZBAPI_REPMANCONF1_BATCH WHERE HeaderText='@Barcode' AND Processed=1
+    </Query>
+
+
+    <Query Name="TransferFGUnitsToBFTable" DatabaseID="EzkDefySAP">
+      exec sp_batch_prod_backflush
+    </Query>
+
+    <Query Name="AddJigNoAndBarcodeToTemp" DatabaseID="EzkDefyMES">
+      exec spAddJigNoAndBarcodeToTemp '@barcode','@jig.ToString'
+    </Query>
+
+    <Query Name="LogJigFaultToWorkingTable" DatabaseID="EzkDefyMES">
+      exec spLogJigFaultToWorkingTable '@Barcode','@FaultType'
+    </Query>
+
+    <Query Name="GetJigNumFromBarcode" DatabaseID="EzkDefyMES">
+      select JigNo from JigUnitLink WHERE Barcode='@Barcode'
+    </Query>
+
+    <Query Name="ClearFaultsFromJig1" DatabaseID="EzkDefyMES">
+      update JigFaults
+      set FaultType=null,
+      FaultCount=0,
+      Enabled=1
+      WHERE JigNo='@Jig'
+    </Query>
+
+    <Query Name="ClearFaultsFromJig2" DatabaseID="EzkDefyMES">
+      update JigFaults
+      set		FaultType=null,
+      FaultCount=0
+      FROM	JigUnitLink a JOIN JigFaults b
+      on a.JigNo=b.JigNo
+      WHERE Barcode='@Barcode'
+    </Query>
+
+    <Query Name="GetJigStatusDisplay" DatabaseID="EzkDefyMES">
+      SELECT [JigNo],b.Explanation FaultType,[FaultCount],[Enabled],[Barcode],[StopTime],[LastScanTime]
+      FROM [DEFY_MES].[dbo].[JigFaults] a
+      LEFT JOIN [dbo].[RepairCodes] b on a.FaultType=b.[RepairCode]
+    </Query>
+
+    <Query Name="DisableJigByOperator" DatabaseID="EzkDefyMES">
+      update JigFaults
+      set Enabled=0,StopTime=Getdate()
+      where JigNo='@Jig'
+    </Query>
+
+    <Query Name="GetJigTestResults" DatabaseID="EzkDefyMES">
+      select case when JigNo is null then 0 else JigNo end JigNo,FaultCode,Count(*) FaultCount
+      from (
+        select	case when TestResult='OK' then TestResult 
+                else Explanation end FaultCode, 
+                c.JigNo ,
+                case when TestResult='OK' then 0
+                else b.RepairCode end SortOrder
+        from Repair a  with (nolock) LEFT JOIN RepairCodes b on a.RepairCode=b.RepairCode
+        left join JigUnitLink c  on (a.Product+a.Serial)=c.Barcode
+        where TestResultDate between '@StartDate' and '@EndDate' and
+        Station=15
+        and TestResult IS NOT NULL and
+        PLine='1'
+      ) as FaultCounts
+      GROUP BY JigNo,SortOrder, FaultCode
+    </Query>
+
+    <Query Name="GetPlugType"  DatabaseID="EzkDefyMES">
+      SELECT PLUGTYPE FROM Product WHERE PRODUCT='@Product'
+    </Query>
+
+    <Query Name="GetProductImage" DatabaseID="EzkDefyMES">
+      Select Image from Product WHERE PRODUCT='@Product'
+    </Query>
+          
+    
+    
+  </Queries>
+</DataApplication>

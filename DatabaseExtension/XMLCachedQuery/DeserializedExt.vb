@@ -53,6 +53,11 @@
         End Get
     End Property
 
+    'included for C# implementations
+    Function GetQuery(QueryName As String) As DataApplicationQuery
+        Return (From x As DataApplicationQuery In Queries Where x.Name = QueryName Select x).First
+    End Function
+
 End Class
 
 Partial Public Class DataApplicationDatabase
