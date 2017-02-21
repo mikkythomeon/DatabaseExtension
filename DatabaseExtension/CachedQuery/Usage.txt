@@ -1,0 +1,37 @@
+﻿CachedQuery Notes
+====================================================================================================================
+Purpose:
+====================================================================================================================
+To remove all VB / SQL syntax from the application code, to save time and make it easier to code SQL data queries. 
+====================================================================================================================
+Steps: 
+--------------------------------------------------------------------------------------------------------------------
+1.	Create a Queries file to contain all the SQL scripts that an application will use during execution. 
+	Format:
+
+--<Query Name='Query1>
+	select * from x where y=@param	
+--</Query>
+--------------------------------------------------------------------------------------------------------------------
+2. Create an instance of a CachedQuery:
+	Me._db = New SQLCachedQueryDatabase(My.Settings("DbUserName"), My.Settings("DbPassword"), My.Settings("DbDatabase"), My.Settings("DbServer"))
+--------------------------------------------------------------------------------------------------------------------
+3a. Load the queries into memory from the query file: 
+    _db.OpenQuery(CONFIG_PATH + "Queries.sql")
+--------------------------------------------------------------------------------------------------------------------
+3b. OR load individual scripts as follows:
+    'now configure all the queries that this form will use...more will be added later in the reports screen
+    _db.OpenQuery(CONFIG_PATH + "SaveProductLocation.sql", "SaveProductLocation")
+    _db.OpenQuery(CONFIG_PATH + "ProductionReceipts.sql", "GetProductionReceipts")
+    _db.OpenQuery(CONFIG_PATH + "WarehouseReceipts.sql", "GetWarehouseReceipts")
+    _db.OpenQuery(CONFIG_PATH + "GITVariance.sql", "GetGITVariance")
+--------------------------------------------------------------------------------------------------------------------
+4. Set the parameters of a query using the following syntax:
+	_db.Queries("SaveProductLocation").SetParameter("@pline", pline)
+    _db.Queries("SaveProductLocation").SetParameter("@product", product)
+    _db.Queries("SaveProductLocation").SetParameter("@serial", serial)
+    _db.Queries("SaveProductLocation").SetParameter("@pl", pl)
+--------------------------------------------------------------------------------------------------------------------
+5. Call the method below to send the query to the database
+	_db.UpdateDatabase("SaveProductLocation")
+====================================================================================================================

@@ -1,0 +1,17 @@
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\DatabaseExtension.dll
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\DatabaseExtension.pdb
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\DatabaseExtension.xml
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.Resources.resources
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.vbproj.GenerateResource.Cache
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.dll
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.xml
+D:\Personal\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.pdb
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\CachedQuery\Queries.sql
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\DatabaseExtension.dll
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\DatabaseExtension.pdb
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\bin\Release\DatabaseExtension.xml
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.Resources.resources
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.vbproj.GenerateResource.Cache
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.dll
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.xml
+D:\Programming\ProgrammingIdeas\DatabaseExtension\DatabaseExtension\obj\Release\DatabaseExtension.pdb

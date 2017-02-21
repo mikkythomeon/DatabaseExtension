@@ -1,0 +1,74 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+DatabaseExtension
+</name>
+</assembly>
+<members>
+<member name="P:DatabaseExtension.DataApplication.Database">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplication.Queries">
+	<remarks/>
+</member><member name="T:DatabaseExtension.DataApplication">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationDatabase.ID">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationDatabase.Database">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationDatabase.Password">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationDatabase.ServerAddress">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationDatabase.UserName">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationDatabase.DatabaseType">
+	<remarks/>
+</member><member name="T:DatabaseExtension.DataApplicationDatabase">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationQuery.Name">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationQuery.DatabaseID">
+	<remarks/>
+</member><member name="P:DatabaseExtension.DataApplicationQuery.Value">
+	<remarks/>
+</member><member name="T:DatabaseExtension.DataApplicationQuery">
+	<remarks/>
+</member><member name="T:DatabaseExtension.SSMSObjectQuery">
+	<summary>
+ Accepts a query generated from SSMS
+ </summary>
+</member><member name="P:DatabaseExtension.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:DatabaseExtension.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:DatabaseExtension.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:DatabaseExtension.CachedQueryDatabase.Prepare">
+	<summary>
+ Prepares for a database operation
+ </summary>
+	<remarks></remarks>
+</member><member name="M:DatabaseExtension.CachedQueryDatabase.OpenQuery(System.String,System.String)">
+	<summary>
+ Loads a saved query from a file and populates a command with command parameters from the file
+ </summary>
+	<param name="QueryFileName"></param>
+	<remarks></remarks>
+</member><member name="M:DatabaseExtension.CachedQueryDatabase.OpenQuery(System.String)">
+	<summary>
+ Opens a file containing multiple queries and extracts the queries from the file
+ Queries are denoted by quasi xml barckets.
+ </summary>
+	<param name="QueryFileName"></param>
+	<remarks></remarks>
+</member>
+</members>
+</doc>
